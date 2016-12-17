@@ -1,53 +1,45 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
-
-import React, { Component } from 'react';
-import {
+'use strict';
+const React = require('react');
+const ReactNative = require('react-native');
+const {
   AppRegistry,
   StyleSheet,
-  Text,
-  View
-} from 'react-native';
+  Navigator
+} = ReactNative;
 
-export default class NewsReader extends Component {
-  render() {
+var NewsSources = require('./components/news');
+var Articles = require('./components/articles');
+
+var ROUTES = {
+  news_sources: NewsSources,
+  articles: Articles
+};
+
+var NewsReader = React.createClass({
+  renderScene: function(route, navigator) {
+
+    var Component = ROUTES[route.name];
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.android.js
-        </Text>
-        <Text style={styles.instructions}>
-          Double tap R on your keyboard to reload,{'\n'}
-          Shake or press menu button for dev menu
-        </Text>
-      </View>
+        <Component route={route} navigator={navigator} url={route.url} />
     );
-  }
-}
+  },
 
-const styles = StyleSheet.create({
+  render: function() {
+    return (
+      <Navigator
+        style={styles.container}
+        initialRoute={{name: 'news_sources', url: ''}}
+        renderScene={this.renderScene}
+        configureScene={() => { return Navigator.SceneConfigs.FloatFromRight; }} />
+    );
+
+  }
+});
+
+var styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
+    flex: 1
+  }
 });
 
 AppRegistry.registerComponent('NewsReader', () => NewsReader);
